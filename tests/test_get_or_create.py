@@ -3,7 +3,7 @@ from unittest import TestCase
 from money import Money
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from stocks.securities import Base, get_or_create, Security, Name
+from securities.securities import Base, get_or_create, Security, Issuer
 
 __author__ = 'mihaildoronin'
 
@@ -19,7 +19,7 @@ class TestGet_or_create(TestCase):
         self.session = Session()
 
     def test_get_or_create(self):
-        correct_name = Name('foo', 'bar', 'foobar')
+        correct_issuer = Issuer('foo', 'bar', 'foobar')
         correct_isin = '123'
         correct_reg_number = '123b'
         correct_issue_size = 43
@@ -29,9 +29,7 @@ class TestGet_or_create(TestCase):
             self.session,
             Security,
             id=correct_id,
-            full=correct_name.full,
-            short=correct_name.short,
-            latin=correct_name.latin,
+            issuer=correct_issuer,
             isin=correct_isin,
             reg_number=correct_reg_number,
             issue_size=correct_issue_size,
@@ -39,7 +37,7 @@ class TestGet_or_create(TestCase):
             face_value_unit=correct_face_value.currency
         )
         self.assertTrue(created)
-        self.assertEquals(security.name, correct_name)
+        self.assertEquals(security.issuer, correct_issuer)
         self.assertEquals(security.isin, correct_isin)
         self.assertEquals(security.reg_number, correct_reg_number)
         self.assertEquals(security.issue_size, correct_issue_size)
@@ -49,9 +47,9 @@ class TestGet_or_create(TestCase):
             self.session,
             Security,
             id=correct_id,
-            full=correct_name.full,
-            short=correct_name.short,
-            latin=correct_name.latin,
+            full=correct_issuer.full_name,
+            short=correct_issuer.short_name,
+            latin=correct_issuer.latin_name,
             isin=correct_isin,
             reg_number=correct_reg_number,
             issue_size=correct_issue_size,

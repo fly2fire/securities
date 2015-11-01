@@ -4,23 +4,24 @@ from sqlalchemy.sql import ClauseElement
 
 __author__ = 'mihaildoronin'
 
-from sqlalchemy import create_engine, Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
 
-class Name(object):
-    def __init__(self, full, short, latin):
-        self.latin = latin
-        self.short = short
-        self.full = full
+class Issuer(object):
+    def __init__(self, full_name, short_name, latin_name):
+        self.latin_name = latin_name
+        self.short_name = short_name
+        self.full_name = full_name
 
     def __composite_values__(self):
-        return self.full, self.short, self.latin
+        return self.full_name, self.short_name, self.latin_name
 
     def __repr__(self):
-        return "full name - {}, \n short name - {} \n latin name - {}"
+        return u"full name - {}, \n short name - {} \n latin name - {}".\
+            format(self.full_name, self.short_name, self.latin_name)
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
@@ -48,7 +49,7 @@ class Security(Base):
     full = Column(String, name='NAME')
     short = Column(String, name='SHORTNAME')
     latin = Column(String, name='LATNAME')
-    name = composite(Name, full, short, latin)
+    issuer = composite(Issuer, full, short, latin)
     isin = Column(String, name='ISIN')
     reg_number = Column(String, name='REGNUMBER')
     issue_size = Column(Integer, name='ISSUESIZE')
@@ -82,15 +83,14 @@ class Security(Base):
             self.face_value_unit = None
 
     @staticmethod
-    def create(_id, name, isin, reg_number, issue_size, face_value):
+    def create(_id, issuer, isin, reg_number, issue_size, face_value):
         return Security(
             id=_id,
-            name=name,
+            issuer=issuer,
             isin=isin,
             reg_number=reg_number,
             issue_size=issue_size,
-            face_value_amount=face_value.amount,
-            face_value_unit=face_value.currency
+            face_value=face_value
         )
 
     def __repr__(self):
@@ -98,4 +98,4 @@ class Security(Base):
                'registration_number {},' \
                'ISIN {},' \
                'issue size {},' \
-               'face value {}'.format(self.id, self.name, self.reg_number, self.isin, self.issue_size, self.face_value)
+               'face value {}'.format(self.id, self.issuer, self.reg_number, self.isin, self.issue_size, self.face_value)
