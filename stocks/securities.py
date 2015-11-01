@@ -82,8 +82,9 @@ class Security(Base):
             self.face_value_unit = None
 
     @staticmethod
-    def create(name, isin, reg_number, issue_size, face_value):
+    def create(_id, name, isin, reg_number, issue_size, face_value):
         return Security(
+            id=_id,
             name=name,
             isin=isin,
             reg_number=reg_number,

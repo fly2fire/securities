@@ -1,6 +1,8 @@
 from unittest import TestCase
+
 from money import Money
-from stocks import Security, Name
+
+from stocks.securities import Security, Name
 
 __author__ = 'mihaildoronin'
 
